@@ -13,7 +13,7 @@ import javax.swing.JLabel;
 
 public class Task1 {
     public static void main(String[] args){
-        JFrame frame = new JFrame("Jframe");
+        JFrame frame = new JFrame("drawline ");
         frame.setLayout(new BorderLayout());
         frame.setSize(200,200);
         frame.setVisible(true);
@@ -26,6 +26,7 @@ public class Task1 {
         panel.setVisible(true);
         frame.add(panel);
         final Graphics2D g  = (Graphics2D) panel.getGraphics();
+        g.setColor(Color.black);
         panel.addMouseListener(new MouseListener() {
             int prepixelx = 0;
             int prepixely = 0;
@@ -82,6 +83,7 @@ public class Task1 {
                 }
                 int x;
                 float dx,dy,y,k;
+
                 dx = (float)x1 - x0;
                 dy = (float)y1 - y0;
                 k = dy / dx;
