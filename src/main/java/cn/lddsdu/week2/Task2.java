@@ -1,98 +1,96 @@
 package cn.lddsdu.week2;
 
-import javax.swing.*;
+import sun.jvm.hotspot.interpreter.OffsetClosure;
+
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseWheelEvent;
+import java.util.ArrayList;
 
 /**
  * Created by jack on 18/3/17.
  */
 
 /*
-填充算法
+填充算法  graphics没有准确找到点击点的坐标的像素颜色的方法  int[][]记录的方式来记录颜色信息
  */
 
-public class Task2{
-    static final int WIDTH = 300;
-    static final int HEIGHT = 300;
-    public static void main(String[] args) throws AWTException {
-        JFrame frame = new JFrame("fill");
-        frame.setSize(300,300);
-        frame.setLayout(new BorderLayout());
-        JPanel panel = new JPanel();
-        final Robot robot = new Robot();
-        panel.setSize(WIDTH,HEIGHT);
-        panel.setBackground(Color.white);
-        panel.setVisible(true);
-        frame.add(panel);
-        frame.setVisible(true);
-        final Graphics2D g = (Graphics2D) panel.getGraphics();
-        g.setColor(Color.black);
-        MouseAdapter ma = new MouseAdapter() {
-            boolean beginFill = false;
-
-            void boundaryFill(int x,int y){
-                if(x <0 || x >= WIDTH || y < 0 || y >= HEIGHT){
-                    System.out.println("fetch the boundary");
-                    return ;
-                }
-                Color color =new Color(2,2,2);//怎么获取到panel中的像素的颜色??????
-                //这里的x,y是在屏幕上的绝对坐标
-                color = robot.getPixelColor(x,y);
-                System.out.println(x+","+y+" "+color.toString());
-                if(!color.equals(Color.black)){
-                    g.drawLine(x,y,x,y);
-                    boundaryFill(x+1,y);
-                    boundaryFill(x-1,y);
-                    boundaryFill(x,y+1);
-                    boundaryFill(x,y-1);
-                }
-
+class Task2Window extends Window{
+    public Task2Window(int grid_size, int border_width, int x, int y, MouseAdapter adapter) {
+        super(grid_size, border_width, x, y, adapter);
+        for (int i = 0 ; i < x; i ++){
+            for(int j = 0; j < y; j++){
+                back_matrix[i][j] = Color.white;
             }
+        }
+    }
 
-            int x1,y1;
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if( !beginFill) {
-                    x1 = e.getX();
-                    y1 = e.getY();
-                    g.drawLine(x1, y1, x1, y1);
-                }
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                if(!beginFill) {
-                    System.out.println("release");
-                    int x2 = e.getX();
-                    int y2 = e.getY();
-                    g.drawLine(x1, y1, x2, y2);
-                }
-            }
-
+    @Override
+    protected MouseAdapter getAdapter() {
+        MouseAdapter superAdapter = super.getAdapter();
+        MouseAdapter adapter = new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                //右键填充颜色
-                if (e.getButton() == MouseEvent.BUTTON3){
-                    beginFill = true;
-                    //开始填充颜色
-                    boundaryFill(e.getXOnScreen(),e.getYOnScreen());
+                //左键
+                if (e.getButton() == MouseEvent.BUTTON1){
+                    superAdapter.mouseClicked(e);
+                }else{
+                    //右键 －－ 染色
+                    x = e.getX();
+                    y = e.getY();
+                    point p = new point(border_width,grid_size,x,y);
+                    dye(p.x,p.y, Color.green);
                 }
             }
-
-            public void mouseDragged(MouseEvent e) {
-                System.out.println("dragged");
-                int x2 = e.getX();
-                int y2 = e.getY();
-                g.drawLine(x1,y1,x2,y2);
-            }
         };
+        return adapter;
+    }
 
-        panel.addMouseListener(ma);
+    @Override
+    void paintGrid(int x, int y) {
+        super.paintGrid(x, y);
+        back_matrix[x][y] = Color.BLACK;
+    }
 
+    void paintGridWithColor(int x, int y , Color color){
+        Color precolor = graphics.getColor();
+        graphics.setColor(color);
+        paintGrid(x,y);
+        back_matrix[x][y] = color;
+        graphics.setColor(precolor);
+    }
+
+    void dye(int x,int y,Color color){
+        Color currentColor;
+        try {
+             currentColor = back_matrix[x][y];
+        }catch (ArrayIndexOutOfBoundsException e){
+            return;
+        }
+
+        if(x >= this.x || y >= this.y){
+            return ;
+        }
+
+        if(!currentColor.equals(color) && !currentColor.equals(Color.black)){
+            paintGridWithColor(x,y,color);
+            dye(x+1,y,color);
+            dye(x-1,y,color);
+            dye(x,y+1,color);
+            dye(x,y-1,color);
+        }
+    }
+}
+
+public class Task2{
+    public static void main(String[] args) {
+        Window window = new Task2Window(10,2,40,40,null);
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        window.showWindow();
     }
 }
 
