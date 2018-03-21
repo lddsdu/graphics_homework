@@ -84,7 +84,7 @@ class Task2Window extends Window{
 
 public class Task2{
     public static void main(String[] args) {
-        Window window = new Task2Window(10,2,40,40,null);
+        Window window = new Task2Window(12,1,40,50,null);
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {

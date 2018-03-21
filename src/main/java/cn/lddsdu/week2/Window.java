@@ -11,8 +11,9 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * Created by jack on 18/3/19.
  */
+
 public class Window{
-    protected JFrame jFrame = new JFrame("draw line");
+    protected JFrame jFrame = new JFrame("task 3");
     protected JPanel panel;
     protected Graphics2D graphics;
     protected Color background_color =  Color.white;
@@ -58,7 +59,7 @@ public class Window{
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     int x = e.getX(), y = e.getY();
-                    point p = new point(10, 2, x, y);
+                    point p = new point(border_width, grid_size, x, y);
                     System.out.println("click " + p);
                     paintGrid(p.x, p.y);
                     click_num++;
