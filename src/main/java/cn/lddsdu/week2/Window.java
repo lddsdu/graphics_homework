@@ -13,7 +13,7 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 
 public class Window{
-    protected JFrame jFrame = new JFrame("task 3");
+    protected JFrame jFrame = new JFrame("作业一");
     protected JPanel panel;
     protected Graphics2D graphics;
     protected Color background_color =  Color.white;
