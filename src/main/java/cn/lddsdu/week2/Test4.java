@@ -86,12 +86,12 @@ public class Test4 {
 
     public static void main(String[] args) {
         Test4 t = new Test4();
-        JFrame frame = new JFrame("beizer曲线");
-        frame.setSize(500,500);
+        JFrame frame = new JFrame("beizer");
+        frame.setSize(500,400);
         frame.setLayout(new BorderLayout());
 
         JPanel panel = new JPanel();
-        panel.setSize(500,500);
+        panel.setSize(500,400);
         panel.setBackground(t.background_color);
         panel.setVisible(true);
 
@@ -134,7 +134,7 @@ public class Test4 {
 
     }
 
-    private static void drawline(Graphics2D g,coordinatePointer s,coordinatePointer e,Color color){
+    protected static void drawline(Graphics2D g,coordinatePointer s,coordinatePointer e,Color color){
         Color c = g.getColor();
         if(color == c){
             g.drawLine(s.getX(),s.getY(),e.getX(),e.getY());
@@ -145,7 +145,7 @@ public class Test4 {
         g.setColor(c);
     }
 
-    private static void bezier(Graphics2D g, java.util.List<coordinatePointer> pointlist) {
+    protected static void bezier(Graphics2D g, java.util.List<coordinatePointer> pointlist) {
         java.util.List<coordinatePointer> lists = new ArrayList<>();
         for(int i = 0 ; i < 100 ; i++){
             lists.add(getpoint(pointlist,i * 0.01));
@@ -157,7 +157,7 @@ public class Test4 {
         }
     }
 
-    private static coordinatePointer getpoint(java.util.List<coordinatePointer> pointerList,double t){
+    protected static coordinatePointer getpoint(java.util.List<coordinatePointer> pointerList,double t){
         if(pointerList.size() <= 0){
             throw new RuntimeException("pointerlist size cannot be <= 0");
         }
@@ -178,7 +178,7 @@ public class Test4 {
      * @param t
      * @return
      */
-    private static coordinatePointer gettpoint(coordinatePointer s,coordinatePointer e,double t){
+    protected static coordinatePointer gettpoint(coordinatePointer s,coordinatePointer e,double t){
         int sx = s.getX(),sy = s.getY(),ex = e.getX(),ey = e.getY();
         int nx = sx + (int)((ex - sx)*t + 0.5);
         int ny = sy + (int)((ey - sy)*t + 0.5);
